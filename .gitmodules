@@ -1,0 +1,3 @@
+[submodule "protofuzz/fuzzdb"]
+	path = protofuzz/fuzzdb
+	url = https://github.com/fuzzdb-project/fuzzdb.git
