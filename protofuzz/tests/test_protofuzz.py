@@ -134,12 +134,14 @@ class TestProtofuzz(unittest.TestCase):
         old_intvalues = values._fuzzdb_integers
         try:
             custom_vals = [1, 2, 3, 4]
+
             def custom_ints(limit=0):
                 return iter(custom_vals)
+
             values._fuzzdb_integers = custom_ints
 
             name = 'Msg'
-            definition = 'message {} {{ required int32 val = 1; }}'.format(name)
+            definition = 'message {} {{required int32 val = 1;}}'.format(name)
             messages = protofuzz.from_description_string(definition)
             results = [x.val for x in messages[name].linear()]
 
