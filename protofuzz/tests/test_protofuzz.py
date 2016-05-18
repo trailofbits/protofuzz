@@ -133,7 +133,7 @@ class TestProtofuzz(unittest.TestCase):
         'Test a custom int generator'
         old_intvalues = values._fuzzdb_integers
         try:
-            custom_vals = [1,2,3,4]
+            custom_vals = [1, 2, 3, 4]
             def custom_ints(limit=0):
                 return iter(custom_vals)
             values._fuzzdb_integers = custom_ints
@@ -146,4 +146,3 @@ class TestProtofuzz(unittest.TestCase):
             self.assertEqual(results, custom_vals)
         finally:
             values._fuzzdb_integers = old_intvalues
-
