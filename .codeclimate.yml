@@ -1,9 +1,9 @@
- engines:
+engines:
   duplication:
     enabled: true
     config:
       languages:
-        - python
+      - python
   fixme:
     enabled: true
   radon:
@@ -15,6 +15,9 @@
         enabled: false
 ratings:
   paths:
+  - "protofuzz/**"
   - "**.py"
 exclude_paths:
-  - "protofuzz/tests/*"
+- "**/tests/**/*"
+- "**/fuzzdb/**/*"
+- "**.proto"
