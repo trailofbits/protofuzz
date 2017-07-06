@@ -9,6 +9,7 @@ import os
 import tempfile
 import subprocess
 import re
+import shutil
 import importlib
 import importlib.util
 
@@ -35,14 +36,11 @@ def find_protoc(path=os.environ['PATH']):
     Traverse a path ($PATH by default) to find the protoc compiler
     '''
     protoc_filename = 'protoc'
-
-    bin_search_paths = path.split(':') or []
-    for search_path in bin_search_paths:
-        bin_path = os.path.join(search_path, protoc_filename)
-        if os.path.isfile(bin_path) and os.access(bin_path, os.X_OK):
-            return bin_path
-
-    raise ProtocNotFound("Protobuf compiler not found")
+    bin_path = shutil.which(protoc_filename, path=path)
+    if bin_path is None:
+        raise ProtocNotFound("Protobuf compiler not found")
+    else:
+        return bin_path
 
 
 def from_string(proto_str):
