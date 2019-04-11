@@ -8,7 +8,7 @@ import unittest
 class TestGenerators(unittest.TestCase):
 
     def test_name(self):
-        'Test setting a name'
+        """Test setting a name"""
         name = 'A Name'
         generator = gen.IterValueGenerator('name', [])
         generator.set_name(name)
@@ -16,7 +16,7 @@ class TestGenerators(unittest.TestCase):
         self.assertEqual(generator.name(), name)
 
     def test_basic_gen(self):
-        'Test a basic generator'
+        """Test a basic generator"""
         source_vals = [1, 2, 3, 4]
         numbers = gen.IterValueGenerator('iter', source_vals)
         produced_vals = []
@@ -27,14 +27,14 @@ class TestGenerators(unittest.TestCase):
         self.assertEqual(produced_vals, source_vals)
 
     def test_gen_init(self):
-        "Test that we can't get a value from a non-iterated generator"
+        """Test that we can't get a value from a non-iterated generator"""
         values = gen.IterValueGenerator('iter', [1, 2, 3, 4])
 
         with self.assertRaises(RuntimeError):
             values.get()
 
     def test_dependent_values(self):
-        'Make sure dependent values are correctly resolved'
+        """Make sure dependent values are correctly resolved"""
 
         def is_even(x):
             return x % 2 == 0
@@ -48,7 +48,7 @@ class TestGenerators(unittest.TestCase):
             self.assertEqual(generated_dependency, is_even(generated_val))
 
     def test_repeated_gets(self):
-        'Make sure that calling get() twice on a generator does not advance it'
+        """Make sure that calling get() twice on a generator does not advance it"""
         def plus_one(x):
             return x + 1
 
@@ -67,7 +67,7 @@ class TestGenerators(unittest.TestCase):
         self.assertEqual(first, second)
 
     def test_permuted_generators(self):
-        'Test basic Product() permuter'
+        """Test basic Product() permuter"""
         values1 = gen.IterValueGenerator('a', [1, 2])
         values2 = gen.IterValueGenerator('b', [1, 2])
         produced_vals = []
@@ -79,7 +79,7 @@ class TestGenerators(unittest.TestCase):
         self.assertEqual(produced_vals, [(1, 1), (1, 2), (2, 1), (2, 2)])
 
     def test_permuted_generators_with_dependent_values(self):
-        'Test that Product permuter works with dependent values'
+        """Test that Product permuter works with dependent values"""
         def is_even(x):
             return x % 2 == 0
 
@@ -94,7 +94,7 @@ class TestGenerators(unittest.TestCase):
             self.assertEqual(is_even(values1.get()), dependent.get())
 
     def test_permuted_generators_with_via_make_dep(self):
-        'Test creation of dependencies via Permuter.make_dependent()'
+        """Test creation of dependencies via Permuter.make_dependent()"""
         names = gen.IterValueGenerator('name', ['alice', 'bob'])
         lengths = gen.IterValueGenerator('len', ['one', 'two'])
         permuter = gen.Zip('Permute', names, lengths)
@@ -106,7 +106,7 @@ class TestGenerators(unittest.TestCase):
             self.assertEqual(len(values['name']), values['len'])
 
     def test_zip(self):
-        'Test a basic Zip permuter'
+        """Test a basic Zip permuter"""
         source_vals = [1, 2, 3, 4]
         vals1 = gen.IterValueGenerator('key', source_vals)
         vals2 = gen.IterValueGenerator('val', source_vals)
@@ -128,7 +128,7 @@ class TestGenerators(unittest.TestCase):
         self.assertEqual(source_vals[:limit], produced_vals)
 
     def test_limited_zip(self):
-        'Test limits on a basic Zip iterator'
+        """Test limits on a basic Zip iterator"""
         source_vals = [1, 2, 3, 4]
         values = gen.IterValueGenerator('name', source_vals)
         produced_vals = []
@@ -139,7 +139,7 @@ class TestGenerators(unittest.TestCase):
         self.assertEqual(source_vals[:-1], produced_vals)
 
     def test_limited_product(self):
-        'Test limits on a Product iterator'
+        """Test limits on a Product iterator"""
         source_vals = [1, 2, 3, 4]
         vals1 = gen.IterValueGenerator('key', source_vals)
         vals2 = gen.IterValueGenerator('values', source_vals)
@@ -151,7 +151,7 @@ class TestGenerators(unittest.TestCase):
         self.assertEqual(produced_vals, [(1, 1), (1, 2), (1, 3), (1, 4)])
 
     def test_dual_permuters(self):
-        'Test nested permuters'
+        """Test nested permuters"""
         source_vals = [1, 2]
         vals1 = gen.IterValueGenerator('key', source_vals)
         vals2 = gen.IterValueGenerator('val', source_vals)

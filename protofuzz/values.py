@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
+"""A collection of values for other modules to use.
 
-'''
-A collection of values for other modules to use. If you wish to use a different
-source of data, this is the place to modify.
-'''
+If you wish to use a different source of data, this is the place to modify.
+
+"""
 
 import os
 import pkg_resources
@@ -14,22 +13,22 @@ __all__ = ['get_strings', 'get_integers', 'get_floats']
 
 
 def _open_fuzzdb_file(path):
-    'Helper to access files within fuzzdb'
+    """Access files within fuzzdb."""
     return pkg_resources.resource_stream('protofuzz', path)
 
 
 def _limit_helper(stream, limit):
-    'Limit a stream depending on the "limit" parameter'
+    """Limit a stream depending on the "limit" parameter."""
     for value in stream:
         yield value
         if limit == 1:
             return
         else:
-            limit = limit - 1
+            limit = limit - 1 # FIXME
 
 
 def _fuzzdb_integers(limit=0):
-    'Helper to grab some integers from fuzzdb'
+    """Return integers from fuzzdb."""
     path = os.path.join(BASE_PATH, 'integer-overflow/integer-overflows.txt')
     stream = _open_fuzzdb_file(path)
     for line in _limit_helper(stream, limit):
@@ -37,8 +36,7 @@ def _fuzzdb_integers(limit=0):
 
 
 def _fuzzdb_get_strings(max_len=0):
-    'Helper to get all the strings from fuzzdb'
-
+    """Return strings from fuzzdb."""
     ignored = ['integer-overflow']
 
     for subdir in pkg_resources.resource_listdir('protofuzz', BASE_PATH):
@@ -64,23 +62,23 @@ def _fuzzdb_get_strings(max_len=0):
 
 
 def get_strings(max_len=0, limit=0):
-    '''
-    Get strings from the fuzzdb database.
+    """Return strings from fuzzdb.
 
-      limit - Limit results to |limit| results, or 0 for unlimited.
-      max_len - Maximum length of string required
-    '''
+    limit - Limit results to |limit| results, or 0 for unlimited.
+    max_len - Maximum length of string required.
+
+    """
     return _limit_helper(_fuzzdb_get_strings(max_len), limit)
 
 
 def get_integers(bitwidth, unsigned, limit=0):
-    '''
-    Get integers from fuzzdb database
+    """Return integers from fuzzdb database.
 
-      bitwidth - The bitwidth that has to contain the integer
-      unsigned - Whether the type is unsigned
-      limit - Limit to |limit| results
-    '''
+    bitwidth - The bitwidth that has to contain the integer
+    unsigned - Whether the type is unsigned
+    limit - Limit to |limit| results.
+
+    """
     if unsigned:
         start, stop = 0, ((1 << bitwidth) - 1)
     else:
@@ -92,9 +90,7 @@ def get_integers(bitwidth, unsigned, limit=0):
 
 
 def get_floats(bitwidth, limit=0):
-    '''
-    Return a number of interesting floating point values
-    '''
+    """Return a number of interesting floating point values."""
     assert bitwidth in (32, 64, 80)
 
     values = [0.0, -1.0, 1.0, -1231231231231.0123, 123123123123123.123]

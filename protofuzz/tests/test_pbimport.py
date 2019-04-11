@@ -18,9 +18,9 @@ class TestPbimport(unittest.TestCase):
         shutil.rmtree(self.tempdir)
 
     def test_find_protoc(self):
-        '''
+        """
         Can we can find protoc?
-        '''
+        """
         binary = os.path.join(self.tempdir, 'protoc')
         with open(binary, 'wb+') as f:
             pass
@@ -31,9 +31,9 @@ class TestPbimport(unittest.TestCase):
         self.assertEqual(found_binary, binary)
 
     def test_from_string(self):
-        '''
+        """
         Get a protobuf module from string
-        '''
+        """
         name = 'Msg'
         contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
 
@@ -41,9 +41,9 @@ class TestPbimport(unittest.TestCase):
         self.assertTrue(hasattr(module, name))
 
     def test_generate_and_import(self):
-        '''
+        """
         Test generation and loading of protobuf artifacts
-        '''
+        """
         name = 'Msg'
         contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
 
@@ -55,9 +55,9 @@ class TestPbimport(unittest.TestCase):
         self.assertTrue(hasattr(module, name))
 
     def test_failing_generate_and_import(self):
-        '''
+        """
         Test the failing of malformed protoc file
-        '''
+        """
         contents = 'malformed protoc'
 
         filename = os.path.join(self.tempdir, "test.proto")
