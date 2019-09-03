@@ -34,13 +34,14 @@ def find_protoc(path=os.environ['PATH']):
     '''
     Traverse a path ($PATH by default) to find the protoc compiler
     '''
-    protoc_filename = 'protoc'
+    protoc_filenames = ['protoc', 'protoc.exe']
 
-    bin_search_paths = path.split(':') or []
+    bin_search_paths = path.split(os.pathsep) or []
     for search_path in bin_search_paths:
         bin_path = os.path.join(search_path, protoc_filename)
-        if os.path.isfile(bin_path) and os.access(bin_path, os.X_OK):
-            return bin_path
+        for protoc_filename in protoc_filenames:
+            if os.path.isfile(bin_path) and os.access(bin_path, os.X_OK):
+                return bin_path
 
     raise ProtocNotFound("Protobuf compiler not found")
 
