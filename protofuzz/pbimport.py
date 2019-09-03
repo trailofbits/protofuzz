@@ -38,8 +38,8 @@ def find_protoc(path=os.environ['PATH']):
 
     bin_search_paths = path.split(os.pathsep) or []
     for search_path in bin_search_paths:
-        bin_path = os.path.join(search_path, protoc_filename)
         for protoc_filename in protoc_filenames:
+            bin_path = os.path.join(search_path, protoc_filename)
             if os.path.isfile(bin_path) and os.access(bin_path, os.X_OK):
                 return bin_path
 
