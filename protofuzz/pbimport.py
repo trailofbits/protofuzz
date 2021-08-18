@@ -97,6 +97,9 @@ def from_file(proto_file):
     Return the module if successfully compiled, otherwise raise either a ProtocNotFound or BadProtobuf exception.
 
     """
+    if proto_file.endswith('_pb2.py'):
+        return _load_module(proto_file)
+
     if not proto_file.endswith('.proto'):
         raise BadProtobuf()
 
