@@ -65,6 +65,7 @@ class TestProtofuzz(unittest.TestCase):
 
         all_values = [obj.color for obj in messages['Message'].linear()]
 
+        # TODO(ww): Why do all_values come out in reversed order here?
         self.assertEqual(all_values, list(reversed(enum_values)))
 
     def test_floating_point(self):
