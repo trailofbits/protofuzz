@@ -222,7 +222,8 @@ def _module_to_generators(pb_module):
 
 def from_file(protobuf_file):
     """Return dict of generators from a path to a .proto file or pre-generated _pb2.py file.
-
+    _pb2.py file should be the output of the Protobuf compiler; users should not attempt to import arbitrary Python files.
+    
     Args:
         protobuf_file(str) -- The path to the .proto file or pre-generated _pb2.py file.
 
