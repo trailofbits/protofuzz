@@ -14,6 +14,9 @@ class TestPbimport(unittest.TestCase):
 
     def setUp(self):
         self.tempdir = tempfile.mkdtemp()
+        self.valid_name = 'Msg'
+        self.valid_contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
+        self.valid_filename = os.path.join(self.tempdir, "test.proto")
 
     def tearDown(self):
         shutil.rmtree(self.tempdir)
@@ -35,22 +38,15 @@ class TestPbimport(unittest.TestCase):
         """
         Get a protobuf module from string
         """
-        name = 'Msg'
-        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
-
-        module = pbimport.from_string(contents)
-        self.assertTrue(hasattr(module, name))
+        module = pbimport.from_string(self.valid_contents)
+        self.assertTrue(hasattr(module, self.valid_name))
 
     def test_from_generated(self):
         """
         Get a protobuf module from generated file
         """
-        name = 'Msg'
-        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
-
-        filename = os.path.join(self.tempdir, "test.proto")
-        with open(filename, 'w') as f:
-            f.write(contents)
+        with open(self.valid_filename, 'w') as f:
+            f.write(self.valid_contents)
     
         dest = self.tempdir
         full_path = os.path.abspath(proto_file)
@@ -89,15 +85,11 @@ class TestPbimport(unittest.TestCase):
         """
         Test generation and loading of protobuf artifacts
         """
-        name = 'Msg'
-        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
+        with open(self.valid_filename, 'w') as f:
+            f.write(self.valid_contents)
 
-        filename = os.path.join(self.tempdir, "test.proto")
-        with open(filename, 'w') as f:
-            f.write(contents)
-
-        module = pbimport.from_file(filename)
-        self.assertTrue(hasattr(module, name))
+        module = pbimport.from_file(self.valid_filename)
+        self.assertTrue(hasattr(module, self.valid_name))
 
     def test_failing_generate_and_import(self):
         """
@@ -105,9 +97,8 @@ class TestPbimport(unittest.TestCase):
         """
         contents = 'malformed protoc'
 
-        filename = os.path.join(self.tempdir, "test.proto")
-        with open(filename, 'w') as f:
+        with open(self.valid_filename, 'w') as f:
             f.write(contents)
 
         with self.assertRaises(pbimport.BadProtobuf):
-            module = pbimport.from_file(filename)
+            module = pbimport.from_file(self.valid_filename)
