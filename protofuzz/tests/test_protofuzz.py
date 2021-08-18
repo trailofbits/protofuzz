@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import secrets
 import unittest
 import tempfile
 
-from protofuzz import protofuzz, values
+from protofuzz import protofuzz, pbimport, values
 
 
 class TestProtofuzz(unittest.TestCase):
