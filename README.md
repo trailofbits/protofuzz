@@ -1,6 +1,6 @@
 # ProtoFuzz
 
-[![CI](https://github.com/trailofbits/blight/workflows/CI/badge.svg)](https://github.com/trailofbits/protofuzz/actions/workflows/ci.yml)
+[![CI](https://github.com/trailofbits/protofuzz/workflows/CI/badge.svg)](https://github.com/trailofbits/protofuzz/actions/workflows/ci.yml)
 [![Issue Count](https://codeclimate.com/github/trailofbits/protofuzz/badges/issue_count.svg)](https://codeclimate.com/github/trailofbits/protofuzz)
 [![PyPI version](https://badge.fury.io/py/protofuzz.svg)](https://badge.fury.io/py/protofuzz)
 
