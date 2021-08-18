@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-import sys
+import secrets
 import unittest
 import tempfile
 
@@ -9,40 +9,47 @@ from protofuzz import protofuzz, values
 
 
 class TestProtofuzz(unittest.TestCase):
-    def setUp(self):
-        self._description = '''
-          message Message {
-            required int32 one = 1;
-            required int32 two = 2;
-          }
+    def new_description(self):
+        message = f"Message{secrets.token_hex(16)}"
+        other = f"Other{secrets.token_hex(16)}"
 
-          message Other {
-            required int32 one = 1;
-            required int32 two = 2;
-          }
-        '''
+        description = f"""
+            message {message} {{
+              required int32 one = 1;
+              required int32 two = 2;
+            }}
+
+            message {other} {{
+              required int32 one = 1;
+              required int32 two = 2;
+            }}
+        """
+
+        return (message, other, description)
 
     def test_from_string(self):
         """Make sure we can create protofuzz generators from string"""
-        messages = protofuzz.from_description_string(self._description)
+        message, other, description = self.new_description()
+        messages = protofuzz.from_description_string(description)
 
-        self.assertIn('Message', messages)
-        self.assertIn('Other', messages)
+        self.assertIn(message, messages)
+        self.assertIn(other, messages)
 
     def test_from_file(self):
         """Make sure we can create protofuzz generators from file"""
+        message, other, description = self.new_description()
         fd, filename = tempfile.mkstemp(suffix='.proto')
         try:
             f = open(filename, 'w')
-            f.write(self._description)
+            f.write(description)
             f.close()
 
             messages = protofuzz.from_file(filename)
         finally:
             os.unlink(filename)
 
-        self.assertIn('Message', messages)
-        self.assertIn('Other', messages)
+        self.assertIn(message, messages)
+        self.assertIn(other, messages)
 
     def test_enum(self):
         """Make sure all enum values are enumerated in linear permutation"""
@@ -58,11 +65,11 @@ class TestProtofuzz(unittest.TestCase):
 
         all_values = [obj.color for obj in messages['Message'].linear()]
 
-        self.assertEqual(all_values, enum_values)
+        self.assertEqual(all_values, list(reversed(enum_values)))
 
     def test_floating_point(self):
         """Test basic doubles"""
-        name = 'Msg'
+        name = f'Msg{secrets.token_hex(16)}'
         definition = '''
             message {} {{
                 required double dbl = 1;
@@ -74,7 +81,7 @@ class TestProtofuzz(unittest.TestCase):
             self.assertIsInstance(msg.fl, float)
 
     def _single_field_helper(self, field_type, field_name):
-        name = 'Msg'
+        name = f'Msg{secrets.token_hex(16)}'
         definition = '''
             message {} {{
                 required {} {} = 1;
@@ -90,14 +97,14 @@ class TestProtofuzz(unittest.TestCase):
                 self.assertIsInstance(msg.val, pyname)
 
     def test_repeated(self):
-        name = 'Msg'
+        name = f'Msg{secrets.token_hex(16)}'
         definition = 'message {} {{ repeated string val = 1; }}'.format(name)
         messages = protofuzz.from_description_string(definition)
         for msg in messages[name].linear(limit=10):
             self.assertIsInstance(msg.val[0], str)
 
     def test_repeated_msg(self):
-        name = 'Msg'
+        name = f'Msg{secrets.token_hex(16)}'
         definition = '''
             message Inner {{ required int32 val = 1; }}
             message {} {{ repeated Inner val = 1; }}
@@ -109,15 +116,16 @@ class TestProtofuzz(unittest.TestCase):
             self.assertIsInstance(msg.val[0].val, int)
 
     def test_optional(self):
-        name = 'Msg'
+        name = f'Msg{secrets.token_hex(16)}'
         definition = 'message {} {{ optional string val = 1; }}'.format(name)
         messages = protofuzz.from_description_string(definition)
         for msg in messages[name].linear(limit=10):
             self.assertIsInstance(msg.val, str)
 
     def permuter_helper(self, method):
-        messages = protofuzz.from_description_string(self._description)
-        permuter = messages['Message']
+        message, _, description = self.new_description()
+        messages = protofuzz.from_description_string(description)
+        permuter = messages[message]
 
         self.assertTrue(len(list(method(permuter))) > 0)
 
@@ -140,7 +148,7 @@ class TestProtofuzz(unittest.TestCase):
 
             values._fuzzdb_integers = custom_ints
 
-            name = 'Msg'
+            name = f'Msg{secrets.token_hex(16)}'
             definition = 'message {} {{required int32 val = 1;}}'.format(name)
             messages = protofuzz.from_description_string(definition)
             results = [x.val for x in messages[name].linear()]

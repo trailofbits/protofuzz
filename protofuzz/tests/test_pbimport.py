@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import secrets
 import stat
 import shutil
 import tempfile
@@ -34,7 +35,7 @@ class TestPbimport(unittest.TestCase):
         """
         Get a protobuf module from string
         """
-        name = 'Msg'
+        name = f'Msg{secrets.token_hex(16)}'
         contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
 
         module = pbimport.from_string(contents)
@@ -44,7 +45,7 @@ class TestPbimport(unittest.TestCase):
         """
         Test generation and loading of protobuf artifacts
         """
-        name = 'Msg'
+        name = f'Msg{secrets.token_hex(16)}'
         contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
 
         filename = os.path.join(self.tempdir, "test.proto")
