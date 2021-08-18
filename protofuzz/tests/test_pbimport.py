@@ -71,7 +71,7 @@ class TestPbimport(unittest.TestCase):
         with open(filename, 'w') as f:
             f.write(contents)
 
-        module = pbimport.from_file(target)
+        module = pbimport.from_file(filename)
         with self.assertRaises(AttributeError):
             pbimport.types_from_module(module)
 
