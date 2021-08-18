@@ -70,9 +70,10 @@ class TestPbimport(unittest.TestCase):
         filename = os.path.join(self.tempdir, "test_pb2.py")    
         with open(filename, 'w') as f:
             f.write(contents)
-    
+
+        module = pbimport.from_file(target)
         with self.assertRaises(AttributeError):
-            module = pbimport.from_file(filename)
+            pbimport.types_from_module(module)
 
     def test_failing_import_not_found(self):
         """
