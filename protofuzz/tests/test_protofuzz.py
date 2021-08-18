@@ -51,6 +51,44 @@ class TestProtofuzz(unittest.TestCase):
         self.assertIn(message, messages)
         self.assertIn(other, messages)
 
+    def test_from_file_generated(self):
+        """Make sure we can create protofuzz generators from generated protobuf code"""
+        message, other, description = self.new_description()
+        fd, filename = tempfile.mkstemp(suffix='.proto')
+        dest = tempfile.tempdir
+        try:
+            f = open(filename, 'w')
+            f.write(description)
+            f.close()
+
+            full_path = os.path.abspath(filename)
+            pbimport._compile_proto(full_path, dest)
+            filename = os.path.split(full_path)[-1]
+            name = re.search(r'^(.*)\.proto$', filename).group(1)
+            target = os.path.join(dest, name+'_pb2.py')
+
+            messages = pbimport.from_file(target)
+            os.unlink(target)
+        finally:
+            os.unlink(filename)
+
+        self.assertIn(message, messages)
+        self.assertIn(other, messages)
+
+    def test_failure_from_invalid_import_file(self):
+        """Asserts invalid generated protobuf code throws exception"""
+        message, other, description = self.new_description()
+        fd, filename = tempfile.mkstemp(suffix='_pb2.py')
+        try:
+            f = open(filename, 'w')
+            f.write(description)
+            f.close()
+
+            with self.assertRaises(AttributeError):
+                messages = pbimport.from_file(filename)
+        finally:
+            os.unlink(filename)
+
     def test_enum(self):
         """Make sure all enum values are enumerated in linear permutation"""
         enum_values = [0, 1, 2]
