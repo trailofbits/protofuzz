@@ -44,7 +44,10 @@ def _fuzzdb_get_strings(max_len=0):
             continue
 
         path = '{}/{}'.format(BASE_PATH, subdir)
-        listing = pkg_resources.resource_listdir('protofuzz', path)
+        try:
+            listing = pkg_resources.resource_listdir('protofuzz', path)
+        except NotADirectoryError:
+             continue
         for filename in listing:
             if not filename.endswith('.txt'):
                 continue
