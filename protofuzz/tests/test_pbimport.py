@@ -2,6 +2,7 @@
 
 import os
 import re
+import secrets
 import stat
 import shutil
 import tempfile
@@ -14,8 +15,6 @@ class TestPbimport(unittest.TestCase):
 
     def setUp(self):
         self.tempdir = tempfile.mkdtemp()
-        self.valid_name = 'Msg'
-        self.valid_contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
         self.valid_filename = os.path.join(self.tempdir, "test.proto")
 
     def tearDown(self):
@@ -38,15 +37,21 @@ class TestPbimport(unittest.TestCase):
         """
         Get a protobuf module from string
         """
-        module = pbimport.from_string(self.valid_contents)
-        self.assertTrue(hasattr(module, self.valid_name))
+        name = f'Msg{secrets.token_hex(16)}'
+        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
+
+        module = pbimport.from_string(contents)
+        self.assertTrue(hasattr(module, name))
 
     def test_from_generated(self):
         """
         Get a protobuf module from generated file
         """
+        name = f'Msg{secrets.token_hex(16)}'
+        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
+
         with open(self.valid_filename, 'w') as f:
-            f.write(self.valid_contents)
+            f.write(contents)
     
         dest = self.tempdir
         full_path = os.path.abspath(proto_file)
@@ -85,11 +90,14 @@ class TestPbimport(unittest.TestCase):
         """
         Test generation and loading of protobuf artifacts
         """
+        name = f'Msg{secrets.token_hex(16)}'
+        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
+
         with open(self.valid_filename, 'w') as f:
-            f.write(self.valid_contents)
+            f.write(contents)
 
         module = pbimport.from_file(self.valid_filename)
-        self.assertTrue(hasattr(module, self.valid_name))
+        self.assertTrue(hasattr(module, name))
 
     def test_failing_generate_and_import(self):
         """
