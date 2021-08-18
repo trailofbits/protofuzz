@@ -93,7 +93,7 @@ def _compile_proto(full_path, dest):
 
 def from_file(proto_file):
     """Takes either a |protoc_file| or a generated |module_file|
-    If given a `_pb2.py` file, this will try to just import the module. This should be the output of the Protobuf compiler
+    If given a `_pb2.py` file, this will try to just import the module. This should be the output of the Protobuf compiler; users should not attempt to import arbitrary Python files.
     If given a `.proto` file, this will compile it via the Protobuf compiler, and import the module.
 
     Return the module if successfully compiled, otherwise raise either a ProtocNotFound or BadProtobuf exception.
