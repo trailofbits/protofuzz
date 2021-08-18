@@ -54,7 +54,7 @@ class TestPbimport(unittest.TestCase):
             f.write(contents)
     
         dest = self.tempdir
-        full_path = os.path.abspath(proto_file)
+        full_path = os.path.abspath(self.valid_filename)
         pbimport._compile_proto(full_path, dest)
 
         filename = os.path.split(full_path)[-1]
@@ -68,9 +68,9 @@ class TestPbimport(unittest.TestCase):
         """
         Test the failing of malformed generated protobuf file
         """
-        contents = 'malformed generated code'
+        contents = 'print("malformed generated code")'
 
-        filename = os.path.join(self.tempdir, "test_pb2.py")
+        filename = os.path.join(self.tempdir, "test_pb2.py")    
         with open(filename, 'w') as f:
             f.write(contents)
     
