@@ -221,16 +221,20 @@ def _module_to_generators(pb_module):
 
 
 def from_file(protobuf_file):
-    """Return dict of generators from a path to a .proto file.
-
+    """Return dict of generators from a path to a .proto file or pre-generated _pb2.py file.
+    _pb2.py file should be the output of the Protobuf compiler; users should not attempt to import arbitrary Python files.
+    
     Args:
-        protobuf_file(str) -- The path to the .proto file.
+        protobuf_file(str) -- The path to the .proto file or pre-generated _pb2.py file.
 
     Returns:
         A dict indexed by message name of ProtobufGenerator objects.
         These can be used to create inter-field dependencies or to generate messages.
 
     Raises:
+        AttributeError: If the _pb2.py file is not a valid generated file
+        FileNotFoundError: If the _pb2.py file is not found
+        ModuleNotFoundError: If there is a nested protobuf import, see issue #11
         BadProtobuf: If the .proto file is incorrectly formatted or named.
         ProtocNotFound: If the protoc compiler was not found on $PATH.
 
