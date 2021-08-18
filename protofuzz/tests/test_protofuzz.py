@@ -64,11 +64,12 @@ class TestProtofuzz(unittest.TestCase):
 
             full_path = os.path.abspath(filename)
             pbimport._compile_proto(full_path, dest)
-            filename = os.path.split(full_path)[-1]
-            name = re.search(r'^(.*)\.proto$', filename).group(1)
+            temp_filename = os.path.split(full_path)[-1]
+            name = re.search(r'^(.*)\.proto$', temp_filename).group(1)
             target = os.path.join(dest, name+'_pb2.py')
 
             messages = protofuzz.from_file(target)
+            os.unlink(target)
         finally:
             os.unlink(filename)
 
