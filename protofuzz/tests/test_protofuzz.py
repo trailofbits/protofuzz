@@ -23,14 +23,14 @@ class TestProtofuzz(unittest.TestCase):
         '''
 
     def test_from_string(self):
-        'Make sure we can create protofuzz generators from string'
+        """Make sure we can create protofuzz generators from string"""
         messages = protofuzz.from_description_string(self._description)
 
         self.assertIn('Message', messages)
         self.assertIn('Other', messages)
 
     def test_from_file(self):
-        'Make sure we can create protofuzz generators from file'
+        """Make sure we can create protofuzz generators from file"""
         fd, filename = tempfile.mkstemp(suffix='.proto')
         try:
             f = open(filename, 'w')
@@ -45,7 +45,7 @@ class TestProtofuzz(unittest.TestCase):
         self.assertIn('Other', messages)
 
     def test_enum(self):
-        'Make sure all enum values are enumerated in linear permutation'
+        """Make sure all enum values are enumerated in linear permutation"""
         enum_values = [0, 1, 2]
         definition = '''
         message Message {{
@@ -61,7 +61,7 @@ class TestProtofuzz(unittest.TestCase):
         self.assertEqual(all_values, enum_values)
 
     def test_floating_point(self):
-        'Test basic doubles'
+        """Test basic doubles"""
         name = 'Msg'
         definition = '''
             message {} {{
@@ -83,7 +83,7 @@ class TestProtofuzz(unittest.TestCase):
         return permuter.linear(limit=10)
 
     def test_basic_types(self):
-        'Test generation of strings, bools, and bytes values'
+        """Test generation of strings, bools, and bytes values"""
         typemap = [('string', str), ('bool', bool), ('bytes', bytes)]
         for pbname, pyname in typemap:
             for msg in self._single_field_helper(pbname, 'val'):
@@ -122,15 +122,15 @@ class TestProtofuzz(unittest.TestCase):
         self.assertTrue(len(list(method(permuter))) > 0)
 
     def test_linear_fuzzing(self):
-        'Linear fuzzing generates some results'
+        """Linear fuzzing generates some results"""
         self.permuter_helper(lambda x: x.linear())
 
     def test_permuted_fuzzing(self):
-        'Permuted fuzzing generates some results'
+        """Permuted fuzzing generates some results"""
         self.permuter_helper(lambda x: x.permute())
 
     def test_custom_ints(self):
-        'Test a custom int generator'
+        """Test a custom int generator"""
         old_intvalues = values._fuzzdb_integers
         try:
             custom_vals = [1, 2, 3, 4]

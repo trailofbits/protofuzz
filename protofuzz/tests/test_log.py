@@ -19,7 +19,7 @@ class TestLog(unittest.TestCase):
         os.unlink(self.tempfile)
 
     def test_few_msgs(self):
-        'Test logging a message'
+        """Test logging a message"""
         logger = self._get_logger(4)
 
         original = ['hello']
@@ -32,7 +32,7 @@ class TestLog(unittest.TestCase):
         self.assertEqual(original, retrieved)
 
     def test_many_msgs(self):
-        'Test logging a few messages'
+        """Test logging a few messages"""
         logger = self._get_logger(3)
 
         original = ['one', 'two', 'three', 'four']
@@ -45,7 +45,7 @@ class TestLog(unittest.TestCase):
         self.assertEqual(original[-3:], retrieved)
 
     def test_nones(self):
-        'Test with None'
+        """Test with None"""
         logger = self._get_logger(1)
         logger.log(None)
         retrieved = logger.get()
