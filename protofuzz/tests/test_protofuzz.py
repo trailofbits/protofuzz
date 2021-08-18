@@ -68,7 +68,7 @@ class TestProtofuzz(unittest.TestCase):
             name = re.search(r'^(.*)\.proto$', filename).group(1)
             target = os.path.join(dest, name+'_pb2.py')
 
-            messages = pbimport.from_file(target)
+            messages = protofuzz.from_file(target)
             os.unlink(target)
         finally:
             os.unlink(filename)
@@ -86,7 +86,7 @@ class TestProtofuzz(unittest.TestCase):
             f.close()
 
             with self.assertRaises(IndentationError):
-                messages = pbimport.from_file(filename)
+                messages = protofuzz.from_file(filename)
         finally:
             os.unlink(filename)
 
@@ -95,7 +95,7 @@ class TestProtofuzz(unittest.TestCase):
         fd, filename = tempfile.mkstemp(suffix='_pb2.py')
         try:
             with self.assertRaises(AttributeError):
-                messages = pbimport.from_file(filename)
+                messages = protofuzz.from_file(filename)
         finally:
             os.unlink(filename)
 
