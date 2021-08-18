@@ -239,6 +239,24 @@ def from_file(protobuf_file):
     return _module_to_generators(module)
 
 
+def from_module(protobuf_file):
+    """Return dict of generators from a path to a generated '_pb2.py' file.
+
+    Args:
+        protobuf_file(str) -- The path to the '_pb2.py' file.
+
+    Returns:
+        A dict indexed by message name of ProtobufGenerator objects.
+        These can be used to create inter-field dependencies or to generate messages.
+
+    Raises:
+        ? if cannot find file
+
+    """
+    module = pbimport._load_module(protobuf_file)
+    return _module_to_generators(module)
+
+
 def from_description_string(protobuf_desc):
     """Return dict of generators from a string representation of the .proto file.
 
