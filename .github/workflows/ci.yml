@@ -10,14 +10,16 @@ on:
 
 jobs:
   lint:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-      with:
-        python-version: "3.9"
-    - name: lint
-      run: |
-        pip3 install black
-        black --check protofuzz
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.9"
+      - name: lint
+        run: |
+          pip3 install black
+          black --check protofuzz
 
   test:
     strategy:
