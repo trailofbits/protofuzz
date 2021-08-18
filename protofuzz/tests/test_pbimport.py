@@ -56,10 +56,7 @@ class TestPbimport(unittest.TestCase):
         dest = self.tempdir
         full_path = os.path.abspath(self.valid_filename)
         pbimport._compile_proto(full_path, dest)
-
-        filename = os.path.split(full_path)[-1]
-        name = re.search(r'^(.*)\.proto$', filename).group(1)
-        target = os.path.join(dest, name+'_pb2.py')
+        target = os.path.join(dest, 'test_pb2.py')
 
         module = pbimport.from_file(target)
         self.assertTrue(hasattr(module, name))
