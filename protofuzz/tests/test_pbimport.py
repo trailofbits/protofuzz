@@ -8,7 +8,7 @@ import shutil
 import tempfile
 import unittest
 
-from protofuzz import pbimport, _compile_proto
+from protofuzz import pbimport
 
 
 class TestPbimport(unittest.TestCase):
@@ -55,7 +55,7 @@ class TestPbimport(unittest.TestCase):
     
         dest = self.tempdir
         full_path = os.path.abspath(proto_file)
-        _compile_proto(full_path, dest)
+        pbimport._compile_proto(full_path, dest)
 
         filename = os.path.split(full_path)[-1]
         name = re.search(r'^(.*)\.proto$', filename).group(1)
