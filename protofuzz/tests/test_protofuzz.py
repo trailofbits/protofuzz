@@ -85,6 +85,15 @@ class TestProtofuzz(unittest.TestCase):
             f.write(description)
             f.close()
 
+            with self.assertRaises(IndentationError):
+                messages = pbimport.from_file(filename)
+        finally:
+            os.unlink(filename)
+
+    def test_failure_from_invalid_import_file_empty(self):
+        """Asserts invalid generated protobuf code throws exception"""
+        fd, filename = tempfile.mkstemp(suffix='_pb2.py')
+        try:
             with self.assertRaises(AttributeError):
                 messages = pbimport.from_file(filename)
         finally:
