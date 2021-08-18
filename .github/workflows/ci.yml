@@ -9,6 +9,16 @@ on:
     - cron: '0 12 * * *'
 
 jobs:
+  lint:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: "3.9"
+    - name: lint
+      run: |
+        pip3 install black
+        black --check protofuzz
+
   test:
     strategy:
       matrix:
