@@ -69,7 +69,6 @@ class TestProtofuzz(unittest.TestCase):
             target = os.path.join(dest, name+'_pb2.py')
 
             messages = protofuzz.from_file(target)
-            os.unlink(target)
         finally:
             os.unlink(filename)
 
