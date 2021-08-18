@@ -3,7 +3,7 @@
 import os
 import pickle
 
-__all__ = ['Logger', 'LastNMessagesLogger']
+__all__ = ["Logger", "LastNMessagesLogger"]
 
 
 class Logger(object):
@@ -40,7 +40,7 @@ class LastNMessagesLogger(Logger):
         entries.append(obj)
         # Only log the last |n| entries if set
         if self._size > 0:
-            entries = entries[-self._size:]
+            entries = entries[-self._size :]
         self._write_entries(entries)
 
     def get(self):
@@ -49,15 +49,17 @@ class LastNMessagesLogger(Logger):
         if not os.path.exists(self._filename):
             return entries
 
-        log_file = open(self._filename, 'rb')
-        while log_file.peek(): # FIXME unresolved attribute reference 'peek' for BinaryIO
+        log_file = open(self._filename, "rb")
+        while (
+            log_file.peek()
+        ):  # FIXME unresolved attribute reference 'peek' for BinaryIO
             entries.append(pickle.load(log_file))
         log_file.close()
 
         return entries
 
     def _write_entries(self, entries):
-        log_file = open(self._filename, 'wb')
+        log_file = open(self._filename, "wb")
         try:
             log_file.seek(0)
             for entry in entries:

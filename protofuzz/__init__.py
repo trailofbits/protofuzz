@@ -20,4 +20,4 @@ Usage:
 
 """
 
-__all__ = ['gen', 'log', 'protofuzz', 'values']
+__all__ = ["gen", "log", "protofuzz", "values"]

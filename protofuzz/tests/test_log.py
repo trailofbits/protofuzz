@@ -22,7 +22,7 @@ class TestLog(unittest.TestCase):
         """Test logging a message"""
         logger = self._get_logger(4)
 
-        original = ['hello']
+        original = ["hello"]
 
         for obj in original:
             logger.log(obj)
@@ -35,7 +35,7 @@ class TestLog(unittest.TestCase):
         """Test logging a few messages"""
         logger = self._get_logger(3)
 
-        original = ['one', 'two', 'three', 'four']
+        original = ["one", "two", "three", "four"]
 
         for obj in original:
             logger.log(obj)

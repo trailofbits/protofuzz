@@ -12,7 +12,6 @@ from protofuzz import pbimport
 
 
 class TestPbimport(unittest.TestCase):
-
     def setUp(self):
         self.tempdir = tempfile.mkdtemp()
         self.valid_filename = os.path.join(self.tempdir, "test.proto")
@@ -24,8 +23,8 @@ class TestPbimport(unittest.TestCase):
         """
         Can we can find protoc?
         """
-        binary = os.path.join(self.tempdir, 'protoc')
-        with open(binary, 'wb+') as f:
+        binary = os.path.join(self.tempdir, "protoc")
+        with open(binary, "wb+") as f:
             pass
         mode = os.stat(binary)
         os.chmod(binary, mode.st_mode | stat.S_IEXEC)
@@ -37,8 +36,8 @@ class TestPbimport(unittest.TestCase):
         """
         Get a protobuf module from string
         """
-        name = f'Msg{secrets.token_hex(16)}'
-        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
+        name = f"Msg{secrets.token_hex(16)}"
+        contents = "message {} {{ required int32 var = 1; }}\n".format(name)
 
         module = pbimport.from_string(contents)
         self.assertTrue(hasattr(module, name))
@@ -47,16 +46,16 @@ class TestPbimport(unittest.TestCase):
         """
         Get a protobuf module from generated file
         """
-        name = f'Msg{secrets.token_hex(16)}'
-        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
+        name = f"Msg{secrets.token_hex(16)}"
+        contents = "message {} {{ required int32 var = 1; }}\n".format(name)
 
-        with open(self.valid_filename, 'w') as f:
+        with open(self.valid_filename, "w") as f:
             f.write(contents)
-    
+
         dest = self.tempdir
         full_path = os.path.abspath(self.valid_filename)
         pbimport._compile_proto(full_path, dest)
-        target = os.path.join(dest, 'test_pb2.py')
+        target = os.path.join(dest, "test_pb2.py")
 
         module = pbimport.from_file(target)
         self.assertTrue(hasattr(module, name))
@@ -67,8 +66,8 @@ class TestPbimport(unittest.TestCase):
         """
         contents = 'print("malformed generated code")'
 
-        filename = os.path.join(self.tempdir, "test_pb2.py")    
-        with open(filename, 'w') as f:
+        filename = os.path.join(self.tempdir, "test_pb2.py")
+        with open(filename, "w") as f:
             f.write(contents)
 
         module = pbimport.from_file(filename)
@@ -80,7 +79,7 @@ class TestPbimport(unittest.TestCase):
         Get a protobuf module from generated file
         """
         filename = os.path.join(self.tempdir, "test_pb2.py")
-    
+
         with self.assertRaises(FileNotFoundError):
             module = pbimport.from_file(filename)
 
@@ -88,10 +87,10 @@ class TestPbimport(unittest.TestCase):
         """
         Test generation and loading of protobuf artifacts
         """
-        name = f'Msg{secrets.token_hex(16)}'
-        contents = 'message {} {{ required int32 var = 1; }}\n'.format(name)
+        name = f"Msg{secrets.token_hex(16)}"
+        contents = "message {} {{ required int32 var = 1; }}\n".format(name)
 
-        with open(self.valid_filename, 'w') as f:
+        with open(self.valid_filename, "w") as f:
             f.write(contents)
 
         module = pbimport.from_file(self.valid_filename)
@@ -101,9 +100,9 @@ class TestPbimport(unittest.TestCase):
         """
         Test the failing of malformed protoc file
         """
-        contents = 'malformed protoc'
+        contents = "malformed protoc"
 
-        with open(self.valid_filename, 'w') as f:
+        with open(self.valid_filename, "w") as f:
             f.write(contents)
 
         with self.assertRaises(pbimport.BadProtobuf):
