@@ -1,12 +1,12 @@
 """Define a set of value generators and permuters that create tuples of values."""
 
-__all__ = ['IterValueGenerator', 'DependentValueGenerator', 'Zip', 'Product']
+__all__ = ["IterValueGenerator", "DependentValueGenerator", "Zip", "Product"]
 
 
 class ValueGenerator(object):
     """Value generator.."""
 
-    def __init__(self, name, limit=float('inf')):
+    def __init__(self, name, limit=float("inf")):
         """Base class of a value generators."""
         self._name = name
         self._cached_value = None
@@ -26,7 +26,7 @@ class ValueGenerator(object):
     def __next__(self):
         if self._limit == 0:
             raise StopIteration
-        self._limit = self._limit - 1   # FIXME: refactor
+        self._limit = self._limit - 1  # FIXME: refactor
         return self.get()
 
     def get(self):
@@ -58,7 +58,9 @@ class IterValueGenerator(ValueGenerator):
 
     def get(self):
         if self._cached_value is None:
-            raise RuntimeError("Can't get a value on a generator that isn't " + " being iterated")
+            raise RuntimeError(
+                "Can't get a value on a generator that isn't " + " being iterated"
+            )
         return self._cached_value
 
 
@@ -76,12 +78,12 @@ class DependentValueGenerator(ValueGenerator):
 
 
 class Permuter(ValueGenerator):
-
     class MessageNotFound(RuntimeError):
         """Raised if attempted to reference an unknown child generator."""
+
         pass
 
-    def __init__(self, name, *generators, limit=float('inf')):
+    def __init__(self, name, *generators, limit=float("inf")):
         """Base class for generators that permute multiple ValueGenerator objects."""
         super().__init__(name, limit)
         self._generators = list(generators)
@@ -105,7 +107,7 @@ class Permuter(ValueGenerator):
         """Return a member generator by a dot-delimited path."""
         obj = self
 
-        for component in path.split('.'):
+        for component in path.split("."):
             ptr = obj
             if not isinstance(ptr, Permuter):
                 raise self.MessageNotFound("Bad element path [wrong type]")
@@ -116,8 +118,10 @@ class Permuter(ValueGenerator):
             obj = next(found_gen, None)
 
             if not obj:
-                raise self.MessageNotFound("Path '{}' unresolved to member.".format(path))
-        return ptr, obj # FIXME: ptr might be referenced before assignment
+                raise self.MessageNotFound(
+                    "Path '{}' unresolved to member.".format(path)
+                )
+        return ptr, obj  # FIXME: ptr might be referenced before assignment
 
     def make_dependent(self, source, target, action):
         """Create a dependency between path 'source' and path 'target' via the callable 'action'.

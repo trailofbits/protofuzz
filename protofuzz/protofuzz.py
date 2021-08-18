@@ -32,7 +32,12 @@ from google.protobuf.internal import containers
 
 from protofuzz import pbimport, gen, values
 
-__all__ = ['ProtobufGenerator', 'from_file', 'from_description_string', 'from_protobuf_class']
+__all__ = [
+    "ProtobufGenerator",
+    "from_file",
+    "from_description_string",
+    "from_protobuf_class",
+]
 
 
 def _int_generator(descriptor, bitwidth, unsigned):
@@ -47,7 +52,7 @@ def _string_generator(descriptor, max_length=0, limit=0):
 
 def _bytes_generator(descriptor, max_length=0, limit=0):
     strs = values.get_strings(max_length, limit)
-    vals = [bytes(_, 'utf-8') for _ in strs]
+    vals = [bytes(_, "utf-8") for _ in strs]
     return gen.IterValueGenerator(descriptor.name, vals)
 
 
@@ -65,10 +70,28 @@ def _prototype_to_generator(descriptor, cls):
     _fd = D.FieldDescriptor
     generator = None
 
-    ints32 = [_fd.TYPE_INT32, _fd.TYPE_UINT32, _fd.TYPE_FIXED32, _fd.TYPE_SFIXED32, _fd.TYPE_SINT32]
-    ints64 = [_fd.TYPE_INT64, _fd.TYPE_UINT64, _fd.TYPE_FIXED64, _fd.TYPE_SFIXED64, _fd.TYPE_SINT64]
-    ints_signed = [_fd.TYPE_INT32, _fd.TYPE_SFIXED32, _fd.TYPE_SINT32, _fd.TYPE_INT64, _fd.TYPE_SFIXED64,
-                   _fd.TYPE_SINT64]
+    ints32 = [
+        _fd.TYPE_INT32,
+        _fd.TYPE_UINT32,
+        _fd.TYPE_FIXED32,
+        _fd.TYPE_SFIXED32,
+        _fd.TYPE_SINT32,
+    ]
+    ints64 = [
+        _fd.TYPE_INT64,
+        _fd.TYPE_UINT64,
+        _fd.TYPE_FIXED64,
+        _fd.TYPE_SFIXED64,
+        _fd.TYPE_SINT64,
+    ]
+    ints_signed = [
+        _fd.TYPE_INT32,
+        _fd.TYPE_SFIXED32,
+        _fd.TYPE_SINT32,
+        _fd.TYPE_INT64,
+        _fd.TYPE_SFIXED64,
+        _fd.TYPE_SINT64,
+    ]
 
     if descriptor.type in ints32 + ints64:
         bitwidth = [32, 64][descriptor.type in ints64]
@@ -223,7 +246,7 @@ def _module_to_generators(pb_module):
 def from_file(protobuf_file):
     """Return dict of generators from a path to a .proto file or pre-generated _pb2.py file.
     _pb2.py file should be the output of the Protobuf compiler; users should not attempt to import arbitrary Python files.
-    
+
     Args:
         protobuf_file(str) -- The path to the .proto file or pre-generated _pb2.py file.
 
