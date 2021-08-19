@@ -55,18 +55,18 @@ class TestProtofuzz(unittest.TestCase):
     def test_from_file_generated(self):
         """Make sure we can create protofuzz generators from generated protobuf code"""
         message, other, description = self.new_description()
-        fd, filename = tempfile.mkstemp(suffix='.proto')
+        fd, filename = tempfile.mkstemp(suffix=".proto")
         dest = tempfile.tempdir
         try:
-            f = open(filename, 'w')
+            f = open(filename, "w")
             f.write(description)
             f.close()
 
             full_path = os.path.abspath(filename)
             pbimport._compile_proto(full_path, dest)
             temp_filename = os.path.split(full_path)[-1]
-            name = re.search(r'^(.*)\.proto$', temp_filename).group(1)
-            target = os.path.join(dest, name+'_pb2.py')
+            name = re.search(r"^(.*)\.proto$", temp_filename).group(1)
+            target = os.path.join(dest, name + "_pb2.py")
 
             messages = protofuzz.from_file(target)
             os.unlink(target)
@@ -79,9 +79,9 @@ class TestProtofuzz(unittest.TestCase):
     def test_failure_from_invalid_import_file(self):
         """Asserts invalid generated protobuf code throws exception"""
         message, other, description = self.new_description()
-        fd, filename = tempfile.mkstemp(suffix='_pb2.py')
+        fd, filename = tempfile.mkstemp(suffix="_pb2.py")
         try:
-            f = open(filename, 'w')
+            f = open(filename, "w")
             f.write(description)
             f.close()
 
@@ -92,7 +92,7 @@ class TestProtofuzz(unittest.TestCase):
 
     def test_failure_from_invalid_import_file_empty(self):
         """Asserts invalid generated protobuf code throws exception"""
-        fd, filename = tempfile.mkstemp(suffix='_pb2.py')
+        fd, filename = tempfile.mkstemp(suffix="_pb2.py")
         try:
             with self.assertRaises(AttributeError):
                 messages = protofuzz.from_file(filename)
