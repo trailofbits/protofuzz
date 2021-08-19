@@ -255,11 +255,11 @@ def from_file(protobuf_file):
         These can be used to create inter-field dependencies or to generate messages.
 
     Raises:
-        AttributeError: If the _pb2.py file is not a valid generated file
         FileNotFoundError: If the _pb2.py file is not found
         ModuleNotFoundError: If there is a nested protobuf import, see issue #11
         BadProtobuf: If the .proto file is incorrectly formatted or named.
         ProtocNotFound: If the protoc compiler was not found on $PATH.
+        Any Import Python module errors: e.g. AttributeError, IndentationError, etc if the _pb2.py file is not a valid generated file
 
     """
     module = pbimport.from_file(protobuf_file)
