@@ -28,10 +28,10 @@ Make sure you have protobuf package installed and `protoc` is accessible from $P
     ...
     Generated object: house: -1
     street: "!"
-    
+
     Generated object: house: 0
     street: "!"
-    
+
     Generated object: house: 256
     street: "!"
     ...
@@ -55,10 +55,15 @@ any callable object:
     >>> fuzzer.add_dependency('foo', 'addr.house', lambda x: x+1)
     >>> for obj in fuzzer.permute():
     ...     print("Generated object: {}".format(obj))
- 
+
 Note however, the values your lambda creates must be conformant to the destination
 type.
 
 # Caveats
 
 Currently, we use [fuzzdb](https://github.com/fuzzdb-project/fuzzdb) for values. This might not be complete or appropriate for your use. Consider swapping it for your own values.
+
+If you have your own separate instance of fuzzdb, you can export `FUZZDB_DIR`
+in your environment with the absolute path to your instance.
+
+    export FUZZDB_DIR=/path/to/your/fuzzdb
