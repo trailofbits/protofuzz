@@ -6,64 +6,72 @@
 
 ProtoFuzz is a generic fuzzer for Google’s Protocol Buffers format. Instead of defining a new fuzzer generator for custom binary formats, protofuzz automatically creates a fuzzer based on the same format definition that programs use. ProtoFuzz is implemented as a stand-alone Python3 program.
 
-# Installation
+## Installation
 
 Make sure you have protobuf package installed and `protoc` is accessible from $PATH, and that `protoc` can generate Python3-compatible code.
 
-    $ git clone --recursive git@github.com:trailofbits/protofuzz.git
-    $ cd protofuzz
-    $ python3 setup.py install
+```console
+$ git clone --recursive git@github.com:trailofbits/protofuzz.git
+$ cd protofuzz
+$ python3 setup.py install
+```
 
-# Usage
+## Usage
 
-    >>> from protofuzz import protofuzz
-    >>> message_fuzzers = protofuzz.from_description_string("""
-    ...     message Address {
-    ...      required int32 house = 1;
-    ...      required string street = 2;
-    ...     }
-    ... """)
-    >>> for obj in message_fuzzers['Address'].permute():
-    ...     print("Generated object: {}".format(obj))
-    ...
-    Generated object: house: -1
-    street: "!"
+```python
+>>> from protofuzz import protofuzz
+>>> message_fuzzers = protofuzz.from_description_string("""
+...     message Address {
+...      required int32 house = 1;
+...      required string street = 2;
+...     }
+... """)
+>>> for obj in message_fuzzers['Address'].permute():
+...     print("Generated object: {}".format(obj))
+...
+Generated object: house: -1
+street: "!"
 
-    Generated object: house: 0
-    street: "!"
+Generated object: house: 0
+street: "!"
 
-    Generated object: house: 256
-    street: "!"
-    ...
+Generated object: house: 256
+street: "!"
+...
+```
 
 You can also create dependencies between arbitrary fields that are resolved with
 any callable object:
 
-    >>> message_fuzzers = protofuzz.from_description_string("""
-    ...     message Address {
-    ...      required int32 house = 1;
-    ...      required string street = 2;
-    ...     }
-    ...     message Other {
-    ...       required Address addr = 1;
-    ...       required uint32 foo = 2;
-    ...     }
-    ... """)
-    >>> fuzzer = message_fuzzers['Other']
-    >>> # The following creates a dependency that ensures Other.foo is always set
-    >>> # to 1 greater than Other.addr.house
-    >>> fuzzer.add_dependency('foo', 'addr.house', lambda x: x+1)
-    >>> for obj in fuzzer.permute():
-    ...     print("Generated object: {}".format(obj))
+```python
+>>> message_fuzzers = protofuzz.from_description_string("""
+...     message Address {
+...      required int32 house = 1;
+...      required string street = 2;
+...     }
+...     message Other {
+...       required Address addr = 1;
+...       required uint32 foo = 2;
+...     }
+... """)
+>>> fuzzer = message_fuzzers['Other']
+>>> # The following creates a dependency that ensures Other.foo is always set
+>>> # to 1 greater than Other.addr.house
+>>> fuzzer.add_dependency('foo', 'addr.house', lambda x: x+1)
+>>> for obj in fuzzer.permute():
+...     print("Generated object: {}".format(obj))
+```
 
 Note however, the values your lambda creates must be conformant to the destination
 type.
 
-# Caveats
+## Caveats
 
 Currently, we use [fuzzdb](https://github.com/fuzzdb-project/fuzzdb) for values. This might not be complete or appropriate for your use. Consider swapping it for your own values.
 
 If you have your own separate instance of fuzzdb, you can export `FUZZDB_DIR`
 in your environment with the absolute path to your instance.
 
-    export FUZZDB_DIR=/path/to/your/fuzzdb
+```console
+export FUZZDB_DIR=/path/to/your/fuzzdb
+```
