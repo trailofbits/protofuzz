@@ -1,7 +1,6 @@
 # ProtoFuzz
 
 [![CI](https://github.com/trailofbits/protofuzz/workflows/CI/badge.svg)](https://github.com/trailofbits/protofuzz/actions/workflows/ci.yml)
-[![Issue Count](https://codeclimate.com/github/trailofbits/protofuzz/badges/issue_count.svg)](https://codeclimate.com/github/trailofbits/protofuzz)
 [![PyPI version](https://badge.fury.io/py/protofuzz.svg)](https://badge.fury.io/py/protofuzz)
 
 ProtoFuzz is a generic fuzzer for Google’s Protocol Buffers format. Instead of defining a new fuzzer generator for custom binary formats, protofuzz automatically creates a fuzzer based on the same format definition that programs use. ProtoFuzz is implemented as a stand-alone Python3 program.
