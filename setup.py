@@ -17,4 +17,5 @@ the same format definition that programs use. ProtoFuzz is implemented as a stan
       zip_safe=False,
       package_data={'protofuzz': [os.path.join('fuzzdb', '**', '*')]},
       include_package_data=True,
+      python_requires=">=3.9",
 )
