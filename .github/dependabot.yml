@@ -2,8 +2,23 @@ version: 2
 
 updates:
   - package-ecosystem: github-actions
-    directory: /
+    directory: "/"
     schedule:
       interval: daily
     cooldown:
       default-days: 7
+    groups:
+      github-actions-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: daily
+    cooldown:
+      default-days: 7
+    groups:
+      pip-dependencies:
+        patterns:
+          - "*"
