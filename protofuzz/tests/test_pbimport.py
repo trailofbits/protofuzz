@@ -88,12 +88,13 @@ class TestPbimport(unittest.TestCase):
         Test generation and loading of protobuf artifacts
         """
         name = f"Msg{secrets.token_hex(16)}"
+        filename = os.path.join(self.tempdir, f"{name}.proto")
         contents = "message {} {{ required int32 var = 1; }}\n".format(name)
 
-        with open(self.valid_filename, "w") as f:
+        with open(filename, "w") as f:
             f.write(contents)
 
-        module = pbimport.from_file(self.valid_filename)
+        module = pbimport.from_file(filename)
         self.assertTrue(hasattr(module, name))
 
     def test_failing_generate_and_import(self):
