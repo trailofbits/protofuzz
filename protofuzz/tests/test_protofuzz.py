@@ -107,9 +107,7 @@ class TestProtofuzz(unittest.TestCase):
             enum Colors {{ RED = {}; GREEN = {}; BLUE = {}; }}
             required Colors color = 1;
         }}
-        """.format(
-            *enum_values
-        )
+        """.format(*enum_values)
 
         messages = protofuzz.from_description_string(definition)
 
@@ -125,9 +123,7 @@ class TestProtofuzz(unittest.TestCase):
             message {} {{
                 required double dbl = 1;
                 required float fl = 2;
-            }}""".format(
-            name
-        )
+            }}""".format(name)
         messages = protofuzz.from_description_string(definition)
         for msg in messages[name].linear():
             self.assertIsInstance(msg.dbl, float)
@@ -138,9 +134,7 @@ class TestProtofuzz(unittest.TestCase):
         definition = """
             message {} {{
                 required {} {} = 1;
-            }}""".format(
-            name, field_type, field_name
-        )
+            }}""".format(name, field_type, field_name)
         permuter = protofuzz.from_description_string(definition)[name]
         return permuter.linear(limit=10)
 
@@ -163,9 +157,7 @@ class TestProtofuzz(unittest.TestCase):
         definition = """
             message Inner {{ required int32 val = 1; }}
             message {} {{ repeated Inner val = 1; }}
-        """.format(
-            name
-        )
+        """.format(name)
 
         messages = protofuzz.from_description_string(definition)
 
